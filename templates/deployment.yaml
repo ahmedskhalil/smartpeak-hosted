@@ -50,33 +50,27 @@ spec:
           volumeMounts:
             {{- toYaml .Values.volumeMounts | default "" | nindent 12 }}
           volumeMounts:
-          - mountPath: /sample-data
+          - mountPath: /sample-data # in pod
             name: sample-data
       volumes:
+      - name: sample-data
+        hostPath:
+          path: /data
+          type: Directory
       # - name: sample-data
       #   hostPath:
       #     path: /d/data/
       #     type: Directory
-      - name: sample-data
-        flexVolume:
-        driver: fstab/cifs
-        fsType: cifs
-        secretRef:
-          name: smb-test
-        options:
-          networkPath: "\\ait-pdfs.win.dtu.dk\users\users6\s200370\data"
-          mountOptions: "dir_mode=0755,file_mode=0755,noperm"
-      {{- with .Values.nodeSelector }}
-      # volumes:
-      #   {{- toYaml .Values.volumes | default "" | nindent 8 }}
-      # volumes:
       # - name: sample-data
-      #   size: "5Gi"
-      #   hostPath:
-      #     path: /data
-      # - name: data
-      #   hostPath:
-      #     path: /data
+      #   flexVolume:
+      #     driver: fstab/cifs
+      #     fsType: cifs
+      #     secretRef:
+      #       name: smb-test
+      #   options:
+      #     networkPath: "\\ait-pdfs.win.dtu.dk\users\users6\usr\data"
+      #     mountOptions: "dir_mode=0755,file_mode=0755,noperm"
+      {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
       {{- end }}
