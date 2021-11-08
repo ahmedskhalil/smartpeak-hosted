@@ -52,6 +52,7 @@ spec:
           volumeMounts:
           - mountPath: /sample-data # in pod
             name: sample-data
+      restartPolicy: Always
       volumes:
       - name: sample-data
         hostPath:

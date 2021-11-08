@@ -45,21 +45,33 @@ securityContext: {}
   # runAsNonRoot: true
   # runAsUser: 1000
 
+# service:
+#   type: ClusterIP
+#   port: 50051
+
 service:
-  type: ClusterIP
+  type: NodePort
   port: 50051
+  nodePort: 50051
 
 ingress:
   enabled: true
-  className: ""
-  annotations: {}
+  className: "nginx-grpc"
+  annotations:
     # kubernetes.io/ingress.class: nginx
     # kubernetes.io/tls-acme: "true"
+    nginx.ingress.kubernetes.io/grpc-backend: "true"
+    nginx.ingress.kubernetes.io/service-upstream: "true"
+    # Forward requests that contain id=user in the request header to the smartpeak-service service.
+    # nginx.ingress.kubernetes.io/service-match: 'smartpeak-service: header("id", "user")'
   hosts:
-    - host: smartpeak.local
+    - host: smartpeak-backend.local
       paths:
         - path: /
           pathType: ImplementationSpecific
+          backend:
+            serviceName: smartpeak-service
+            servicePort: 50051
   tls: []
   #  - secretName: chart-example-tls
   #    hosts:
@@ -82,7 +94,7 @@ autoscaling:
   minReplicas: 2
   maxReplicas: 5
   targetCPUUtilizationPercentage: 80
-  targetMemoryUtilizationPercentage: 80
+  # targetMemoryUtilizationPercentage: 80
 
 nodeSelector: {}
 
