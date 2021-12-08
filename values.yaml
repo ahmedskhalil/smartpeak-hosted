@@ -7,7 +7,6 @@ replicaCount: 3
 image:
   repository: autoflowresearch/smartpeak-server
   pullPolicy: IfNotPresent
-  # Overrides the image tag whose default is the chart appVersion.
   tag: v1.0.0
 
 imagePullSecrets: []
@@ -75,7 +74,8 @@ ingress:
         - path: /
           pathType: ImplementationSpecific
           backend:
-            serviceName: smartpeak-service
+            # serviceName: smartpeak-service
+            serviceName: smartpeak-hosted
             servicePort: 50051
   tls: []
   #  - secretName: chart-example-tls
@@ -92,8 +92,8 @@ resources:
   #   cpu: 100m
   #   memory: 128Mi
   requests:
-    cpu: 100m
-    memory: 64Mi
+    cpu: "100m"
+    memory: "64Mi"
 
 autoscaling:
   enabled: true
