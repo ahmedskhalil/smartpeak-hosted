@@ -35,45 +35,21 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           env:
           - name: SMARTPEAK_USERS_DB
-            value: /sample-data/db/users.db
+            value: /db/users.db
           ports:
             - name: grpc
               containerPort: 50051
               protocol: TCP
-          # livenessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
-          # readinessProbe:
-          #   httpGet:
-          #     path: /
-          #     port: http
           resources:
             {{- toYaml .Values.resources | nindent 12 }}
           volumeMounts:
             {{- toYaml .Values.volumeMounts | default "" | nindent 12 }}
-          volumeMounts:
-          - mountPath: /sample-data # in pod
-            name: sample-data
       restartPolicy: Always
       volumes:
       - name: sample-data
         hostPath:
           path: /data
           type: Directory
-      # - name: sample-data
-      #   hostPath:
-      #     path: /d/data/
-      #     type: Directory
-      # - name: sample-data
-      #   flexVolume:
-      #     driver: fstab/cifs
-      #     fsType: cifs
-      #     secretRef:
-      #       name: smb-test
-      #   options:
-      #     networkPath: "\\ait-pdfs.win.dtu.dk\users\users6\usr\data"
-      #     mountOptions: "dir_mode=0755,file_mode=0755,noperm"
       {{- with .Values.nodeSelector }}
       nodeSelector:
         {{- toYaml . | nindent 8 }}
